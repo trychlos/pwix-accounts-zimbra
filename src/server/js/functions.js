@@ -56,7 +56,7 @@ AccountsZimbra.s = {
 LDAP.tryDBFirst = false;
 
 // doesn't create the account if it is not found in LDAP
-LDAP.alwaysCreateAccountIf = function (){
+LDAP.alwaysCreateAccountIf = function(){
     return false;
 };
 
@@ -73,7 +73,7 @@ LDAP.bindValue = function( usernameOrEmail, isEmailAddress, FQDN ){
 
 // babrahams:accounts-ldap defaults to create a "standard" user account with a password
 //  not an account from any particular service - create here a 'zimbra'-service account
-LDAP.createUser = async function ( userObject, person, extraFields ){
+LDAP.createUser = async function( userObject, person, extraFields ){
     let serviceData = person;
     serviceData.id = person.dn;
     serviceData.identifiedEmail = userObject.email;
@@ -89,7 +89,7 @@ LDAP.createUser = async function ( userObject, person, extraFields ){
 };
 
 // doesn't create the account if it doesn't exist in local accounts collection
-LDAP.createUserIfNotExists = async function ( usernameOrEmail, ldapObject ){
+LDAP.createUserIfNotExists = async function( usernameOrEmail, ldapObject ){
     let fn = AccountsZimbra.configure().createUserIfNotExists;
     if( fn && _.isFunction( fn )){
         fn = await fn( usernameOrEmail, ldapObject );
@@ -97,9 +97,8 @@ LDAP.createUserIfNotExists = async function ( usernameOrEmail, ldapObject ){
     return Boolean( fn );
 };
 
-LDAP.filter = function ( isEmailAddress, usernameOrEmail, FQDN, settings ){
+LDAP.filter = function( isEmailAddress, usernameOrEmail, FQDN, settings ){
     const searchFilter = '(&(objectClass=zimbraAccount)(mail=' +usernameOrEmail + '))';
-    //const searchFilter = '(&(objectClass=zimbraAccount)(zimbraMailDeliveryAddress=' +usernameOrEmail + '))';
     LDAP.log('Search filter: ' + searchFilter);
     return searchFilter;
 };
