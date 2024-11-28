@@ -4,7 +4,13 @@
 
 AccountsZimbra.C = {
     // the service name
-    Service: 'zimbra'
+    Service: 'zimbra',
+
+    // verbosity levels
+    Verbose: {
+        NONE: 0,
+        CONFIGURE:      0x01 <<  0
+    }
 };
 
 // non exported variables

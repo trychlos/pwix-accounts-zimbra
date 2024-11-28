@@ -8,69 +8,27 @@ On client side, this package defines `Meteor.loginWithZimbra()` function.
 
 ## How does that work ?
 
-The application which does want take advantage of the AccountsZimbra Identity and Access Manager to manage its users accounts must first register as a client against AccountsZimbra.
+Zimbra is an open-source mail manager which stores and manages its accounts inside of a LDAP directory.
 
-Once registered, it gets a `ClientId` and a client secret.
+Taking advantage of this LDAP directory to check an identity and its password is rather straightforward, though it has unfortunately the drawback of not embedding authorizations for a given application.
 
-It now has to:
-
-- include the `iziamLoginButton` component in the ad-hoc place of its pages
-
-- define the needed configuration as a private JSON structure in its server settings, for example in a `private/config/server/environments.json` file:
-
-```json
-    "<appname>": {
-        "environments": {
-            "<environment>": {
-                "private": {
-                    "iziam": {
-                        "comments": [
-                            "openbook-dev to iziam-dev - test user for auth code grant flow"
-                        ],
-                        "loginStyle": "popup",
-                        "popupOptions": "{ width: 900, height: 450 }",
-                        "issuerUrl": "http://localhost:3003/iziam",
-                        "client_id": "6eb26be8c55b44f48f2d046232e8cfac",
-                        "client_secret": "edsfvgrtyhujhngbnhjkui3456789okjgfb098765432xwdcfvghjk87654xcfvgh_7654DFGH",
-                        "redirect_uri": "https://slim14.trychlos.lan/_oauth/iziam",
-                        "scopes": [
-                            "openid",
-                            "offline_access"
-                        ]
-                    }
-                }
-            },
-```
-
-This configuration manages:
-
-- the style and size of the login dialog:
-
-    - `loginStyle`: either `popup` or `redirect`, defaulting to `popup`.
-
-    - `popupOptions`: any style option to be given to the popup, defaulting to `{ width: 900, height: 450 }`.
-
-- the AccountsZimbra configuration:
-
-    - `issuerUrl`: MANDATORY - the URL of the AccountsZimbra.
-
-- the client configuration which must match the AccountsZimbra registration:
-
-    - `client_id`: MANDATORY - the client identifier issued at registration time
-
-    - `client_secret`: if the client wants authenticate against the token endpoint
-
-    - `redirect_uri`: one of the pre-registered allowed redirection URIs
-
-    - `resources`: one or more resources asked by your client application, defaulting to `[]`
-
-    - `scopes`: one or more scopes your client application wants use, defaulting to `[ "openid" ]`
-
-    - `token_endpoint_auth_method`: the client authentication method, defaulting to `client_secret_basic`
+This is so a configuration option to automatically create any authenticated account into the local account database of the application.
 
 ## Provides
 
+`pwix:accounts-zimbra` exports a global `AccountsZimbra` object.
+
 ### Functions
+
+#### `AccountsZimbra.configure( o<Object> )`
+
+See [below](#configuration)
+
+#### `AccountsZimbra.i18n.namespace()`
+
+Returns the i18n namespace used by the package. Used to add translations at runtime.
+
+Available both on the client and the server.
 
 #### `Meteor.loginWithIzIAM( options<Object>, ( err ) => {})`
 
@@ -78,63 +36,55 @@ An async function which starts the login OpenID flow. It doesn't return any valu
 
 ### Components
 
-#### `iziamChangeButton`
-
-A "change password" button Blaze template to be called with following data context:
-
-- `btnClasses`
-
-    A list of classes to be added to the button, defaulting to `btn-outline-primary`;
-
-- `btnLabel`
-
-    The button label, defaulting to (translated) 'Change password'.
-
-#### `iziamLoginButton`
-
-A login button Blaze template to be called with following data context:
-
-- `btnClasses`
-
-    A list of classes to be added to the button, defaulting to `btn-outline-primary`;
-
-- `btnLabel`
-
-    The button label, defaulting to (translated) 'Login with AccountsZimbra'.
-
-- `withLabel`
-
-    Whether we want display a label in the button, defaulting to `true`.
-
-- `withLogo`
-
-    Whether we want display the AccountsZimbra logo in the button, defaulting to `true`.
-
-- `iziamOptions`
-
-    An options object to be passed to `pwix:iziam-oidc` package and which may contain any `openid-client` option.
-
-#### `iziamLogoutButton`
-
-A logout button Blaze template to be called with following data context:
-
-- `btnClasses`
-
-    A list of classes to be added to the button, defaulting to `btn-outline-primary`;
-
-- `btnLabel`
-
-    The button label, defaulting to (translated) 'Logout'.
-
-This is for consistency reason only, and in anyway not mandatory to use. Clicking on the button actually just triggers the `Meteor.logout()` standard function.
-
 ## Configuration
 
-None at the moment.
+The package's behavior can be configured through a call to the `AccountsZimbra.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
+
+Known configuration options are:
+
+- `createUserIfNotExists`
+
+    Either a Boolean, or a function which returns such a Boolean, defaulting to `false`: if the user doesn't exist in the local accounts database, then he is not created, and thus cannot log-in.
+
+    If a function, it must have following prototype:
+
+    `async createUserIfNotExists( emailAddress<String>, ldap<Object> ): Boolean`.
+
+- `verbosity`
+
+    The verbosity level as:
+
+    - `AccountsZimbra.C.Verbose.NONE`
+
+    or an OR-ed value of integer constants:
+
+    - `AccountsZimbra.C.Verbose.CONFIGURE`
+
+        Trace configuration operations
+
+    Defaults to `AccountsZimbra.C.Verbose.CONFIGURE`.
+
+Please note that `AccountsZimbra.configure()` method should be called in the same terms both in client and server sides.
+
+Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `AccountsZimbra.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
 
 ## NPM peer dependencies
 
-None at the moment.
+Starting with v 1.0.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`.
+
+Instead we check npm versions of installed packages at runtime, on server startup, in development environment.
+
+Dependencies as of v 1.0.0:
+
+```js
+    'lodash': '^4.17.0'
+```
+
+Each of these dependencies should be installed at application level:
+
+```sh
+    meteor npm install <package> --save
+```
 
 ## Translations
 

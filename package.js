@@ -21,12 +21,16 @@ Package.onTest( function( api ){
 
 function configure( api ){
     api.versionsFrom([ '2.9.0', '3.0-rc.1' ]);
-    //api.use( 'accounts-base@3.0.1', ['client', 'server'] );
-    //api.use( 'accounts-oauth', ['client', 'server']);
+    api.export([
+        'AccountsZimbra'
+    ]);
+    api.use( 'accounts-base@3.0.1' );
+    api.use( 'babrahams:accounts-ldap@0.10.0' );
     api.use( 'blaze-html-templates@3.0.0', 'client' );
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'pwix:i18n@1.5.2' );
+    api.use( 'reactive-var' );
     api.use( 'tmeasday:check-npm-versions@2.0.0-beta.0', 'server' );
 }
 

@@ -55,9 +55,36 @@ AccountsZimbra.s = {
 // always use the LDAP server
 LDAP.tryDBFirst = false;
 
+// for zimbra, want tranform 'user@domain.com' to 'uid=user,ou=people,dc=domain,dc=com'
+LDAP.bindValue = function( usernameOrEmail, isEmailAddress, FQDN ){
+    const words = usernameOrEmail.split( '@' );
+    const domain = words[1].split( '.' );
+    let value = 'uid='+words[0]+',ou=people';
+    for ( const w of domain ){
+        value += ',dc='+w;
+    }
+    return value;
+}
+
+// for zimbra, want tranform 'user@domain.com' to 'dc=com'
+LDAP.searchBase = function( searchUsername, server, isEmail, request, settings ){
+    const words = searchUsername.split( '@' );
+    const domain = words[1].split( '.' );
+    return 'dc='+domain[domain.length-1];
+}
+
 // doesn't create the account if it is not found in LDAP
 LDAP.alwaysCreateAccountIf = function (){
     return false;
+};
+
+// doesn't create the account if it doesn't exist in local accounts collection
+LDAP.createUserIfNotExists = async function ( usernameOrEmail, ldapObject ){
+    let fn = AccountsZimbra.configure().createUserIfNotExists;
+    if( fn && _.isFunction( fn )){
+        fn = await fn( usernameOrEmail, ldapObject );
+    }
+    return Boolean( fn );
 };
 
 LDAP.filter = function ( isEmailAddress, usernameOrEmail, FQDN, settings ){
