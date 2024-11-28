@@ -2,19 +2,13 @@
 
 ## What is it ?
 
-A login service for izIAM(©) Identity and Access Manager accounts which implements [OpenID Connect 1.0](https://openid.net/specs/openid-connect-core-1_0.html) login flow.
-
-This package is based on:
-
-- [accounts-github](https://github.com/meteor/meteor/tree/devel/packages/accounts-github)
-- [salleman:accounts-oidc](https://github.com/salleman33/meteor-accounts-oidc/tree/master/packages/switch_accounts-oidc) v 1.0.12
-- [Meteor documentation](https://docs.meteor.com/api/accounts#Meteor-loginWith%3CExternalService%3E)
+A login service for the Zimbra LDAP directory.
 
 On client side, this package defines `Meteor.loginWithZimbra()` function.
 
 ## How does that work ?
 
-The application which does want take advantage of the izIAM Identity and Access Manager to manage its users accounts must first register as a client against izIAM.
+The application which does want take advantage of the AccountsZimbra Identity and Access Manager to manage its users accounts must first register as a client against AccountsZimbra.
 
 Once registered, it gets a `ClientId` and a client secret.
 
@@ -56,11 +50,11 @@ This configuration manages:
 
     - `popupOptions`: any style option to be given to the popup, defaulting to `{ width: 900, height: 450 }`.
 
-- the izIAM configuration:
+- the AccountsZimbra configuration:
 
-    - `issuerUrl`: MANDATORY - the URL of the izIAM.
+    - `issuerUrl`: MANDATORY - the URL of the AccountsZimbra.
 
-- the client configuration which must match the izIAM registration:
+- the client configuration which must match the AccountsZimbra registration:
 
     - `client_id`: MANDATORY - the client identifier issued at registration time
 
@@ -106,7 +100,7 @@ A login button Blaze template to be called with following data context:
 
 - `btnLabel`
 
-    The button label, defaulting to (translated) 'Login with izIAM'.
+    The button label, defaulting to (translated) 'Login with AccountsZimbra'.
 
 - `withLabel`
 
@@ -114,7 +108,7 @@ A login button Blaze template to be called with following data context:
 
 - `withLogo`
 
-    Whether we want display the izIAM logo in the button, defaulting to `true`.
+    Whether we want display the AccountsZimbra logo in the button, defaulting to `true`.
 
 - `iziamOptions`
 

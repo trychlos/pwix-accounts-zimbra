@@ -5,22 +5,42 @@
  */
 
 import { Accounts } from 'meteor/accounts-base';
-import { izIAM } from 'meteor/pwix:iziam-oidc';
+import { LDAP } from 'meteor/babrahams:accounts-ldap';
 
-Accounts.oauth.registerService( izIAM.C.Service );
+//Accounts.oauth.registerService( AccountsZimbra.C.Service );
 
-const loginWithIzIAM = ( options, callback ) => {
+const loginWithZimbra = ( options, callback ) => {
 
     // support a callback without options
-    if( !callback && typeof options === 'function' ){
-        callback = options;
-        options = null;
-    }
+    //if( !callback && typeof options === 'function' ){
+    //    callback = options;
+    //    options = null;
+    //}
 
-    const credentialRequestCompleteCallback = Accounts.oauth.credentialRequestCompleteHandler( callback );
-    izIAM.requestCredential( options, credentialRequestCompleteCallback );
+    //const credentialRequestCompleteCallback = Accounts.oauth.credentialRequestCompleteHandler( callback );
+    //AccountsZimbra.requestCredential( options, credentialRequestCompleteCallback );
+    //console.debug( 'calling LDAP initLogin()' );
+    //initLogin();
+    Meteor.callAsync( 'pwix_accounts_zimbra_setup_service' ).then(() => {
+        const extraFieldData = {};
+
+        const res = Meteor.loginWithLdap( 'pierre@wieser.fr', 'JV56-Xjk98z&', extraFieldData, function (err, res) {
+            if (Meteor.userId()) {
+              //showForm.set(false);
+              LDAP.onSuccessfulLogin(Meteor.user());
+              return true;
+            }
+            else {
+              //firstAttempt.set(false);
+              if (err && err.error === 401) {
+                alert("If you don't have an account provided, you need to sign in using an email address");
+              }
+              return false;
+            }
+          });
+    });
 };
 
-Accounts.registerClientLoginFunction( izIAM.C.Service, loginWithIzIAM );
+Accounts.registerClientLoginFunction( AccountsZimbra.C.Service, loginWithZimbra );
 
-Meteor.loginWithIzIAM = ( ...args ) => Accounts.applyLoginFunction( izIAM.C.Service, args );
+Meteor.loginWithZimbra = ( ...args ) => Accounts.applyLoginFunction( AccountsZimbra.C.Service, args );
