@@ -7,9 +7,9 @@
 import _ from 'lodash';
 
 import { Accounts } from 'meteor/accounts-base';
-
 import { EnvSettings } from 'meteor/pwix:env-settings';
 import { LDAP } from 'meteor/babrahams:accounts-ldap';
+import { Random } from 'meteor/random';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 
 AccountsZimbra.s = {
@@ -55,6 +55,11 @@ AccountsZimbra.s = {
 // always use the LDAP server
 LDAP.tryDBFirst = false;
 
+// doesn't create the account if it is not found in LDAP
+LDAP.alwaysCreateAccountIf = function (){
+    return false;
+};
+
 // for zimbra, want tranform 'user@domain.com' to 'uid=user,ou=people,dc=domain,dc=com'
 LDAP.bindValue = function( usernameOrEmail, isEmailAddress, FQDN ){
     const words = usernameOrEmail.split( '@' );
@@ -66,16 +71,21 @@ LDAP.bindValue = function( usernameOrEmail, isEmailAddress, FQDN ){
     return value;
 }
 
-// for zimbra, want tranform 'user@domain.com' to 'dc=com'
-LDAP.searchBase = function( searchUsername, server, isEmail, request, settings ){
-    const words = searchUsername.split( '@' );
-    const domain = words[1].split( '.' );
-    return 'dc='+domain[domain.length-1];
-}
-
-// doesn't create the account if it is not found in LDAP
-LDAP.alwaysCreateAccountIf = function (){
-    return false;
+// babrahams:accounts-ldap defaults to create a "standard" user account with a password
+//  not an account from any particular service - create here a 'zimbra'-service account
+LDAP.createUser = async function ( userObject, person, extraFields ){
+    let serviceData = person;
+    serviceData.id = person.dn;
+    serviceData.identifiedEmail = userObject.email;
+    const res = await Accounts.updateOrCreateUserFromExternalService( AccountsZimbra.C.Service, serviceData );
+    await Meteor.users.updateAsync({ _id: res.userId }, { $set: { emails: [
+        {
+            address: userObject.email,
+            verified: false,
+            _id: Random.id()
+        }
+    ]}});
+    return res.userId;
 };
 
 // doesn't create the account if it doesn't exist in local accounts collection
@@ -93,3 +103,10 @@ LDAP.filter = function ( isEmailAddress, usernameOrEmail, FQDN, settings ){
     LDAP.log('Search filter: ' + searchFilter);
     return searchFilter;
 };
+
+// for zimbra, want tranform 'user@domain.com' to 'dc=com'
+LDAP.searchBase = function( searchUsername, server, isEmail, request, settings ){
+    const words = searchUsername.split( '@' );
+    const domain = words[1].split( '.' );
+    return 'dc='+domain[domain.length-1];
+}
