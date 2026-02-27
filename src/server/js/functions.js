@@ -9,8 +9,11 @@ import _ from 'lodash';
 import { Accounts } from 'meteor/accounts-base';
 import { EnvSettings } from 'meteor/pwix:env-settings';
 import { LDAP } from 'meteor/babrahams:accounts-ldap';
+import { Logger } from 'meteor/pwix:logger';
 import { Random } from 'meteor/random';
 import { ServiceConfiguration } from 'meteor/service-configuration';
+
+const logger = Logger.get();
 
 AccountsZimbra.s = {
 
@@ -36,10 +39,10 @@ AccountsZimbra.s = {
             const settings = EnvSettings.environmentServerSettings();
             if( settings && settings.private ){
                 if( settings.private[AccountsZimbra.C.Service] ){
-                    console.debug( 'set AccountsZimbra.s.settings from private server settings per environment' );
+                    logger.debug( 'set AccountsZimbra.s.settings from private server settings per environment' );
                     AccountsZimbra.s.settings = settings.private[AccountsZimbra.C.Service];
                 } else {
-                    console.warn( 'unable to find \''+AccountsZimbra.C.Service+'\' section in private settings' );
+                    logger.warn( 'unable to find \''+AccountsZimbra.C.Service+'\' section in private settings' );
                 }
             }
         }
