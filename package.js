@@ -30,6 +30,7 @@ function configure( api ){
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'pwix:i18n@1.5.2' );
+    api.use( 'pwix:logger@1.0.0-rc' );
     api.use( 'reactive-var' );
     api.use( 'tmeasday:check-npm-versions@2.0.0-beta.0', 'server' );
 }
