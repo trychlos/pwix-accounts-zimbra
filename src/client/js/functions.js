@@ -20,7 +20,7 @@ const loginWithZimbra = ( options, callback ) => {
     //const credentialRequestCompleteCallback = Accounts.oauth.credentialRequestCompleteHandler( callback );
     //AccountsZimbra.requestCredential( options, credentialRequestCompleteCallback );
 
-    Meteor.callAsync( 'pwix_accounts_zimbra_setup_service' ).then(() => {
+    Meteor.callAsync( 'pwix.AccountsZimbra.m.setupService' ).then(() => {
         const extraFieldData = {};
 
         const res = Meteor.loginWithLdap( 'pierre@wieser.fr', 'JV56-Xjk98z&', extraFieldData, function ( err, res ){
