@@ -12,12 +12,8 @@ import _ from 'lodash';
 
 import { Accounts } from 'meteor/accounts-base';
 import { EnvSettings } from 'meteor/pwix:env-settings';
-<<<<<<< HEAD
-import { LDAP } from 'meteor/babrahams:accounts-ldap';
-=======
 import { LDAP } from 'meteor/pwix:accounts-ldap';
 import { Logger } from 'meteor/pwix:logger';
->>>>>>> vnext
 import { Random } from 'meteor/random';
 import { ServiceConfiguration } from 'meteor/service-configuration';
 import { Tracker } from 'meteor/tracker';
@@ -58,16 +54,7 @@ const _autoVerifyEmail = async function( userObject, person ){
 // always use the LDAP server
 LDAP.tryDBFirst = false;
 
-<<<<<<< HEAD
-// doesn't create the account if it is not found in LDAP
-LDAP.alwaysCreateAccountIf = function (){
-    return false;
-};
-
-// for zimbra, want tranform 'user@domain.com' to 'uid=user,ou=people,dc=domain,dc=com'
-=======
 // for zimbra/carbonio, want tranform 'user@domain.com' to 'uid=user,ou=people,dc=domain,dc=com'
->>>>>>> vnext
 LDAP.bindValue = function( usernameOrEmail, isEmailAddress, FQDN ){
     const words = usernameOrEmail.split( '@' );
     const domain = words[1].split( '.' );
@@ -79,13 +66,6 @@ LDAP.bindValue = function( usernameOrEmail, isEmailAddress, FQDN ){
 }
 
 // babrahams:accounts-ldap defaults to create a "standard" user account with a password
-<<<<<<< HEAD
-//  not an account from any particular service - create here a 'zimbra'-service account
-LDAP.createUser = async function ( userObject, person, extraFields ){
-    let serviceData = person;
-    serviceData.id = person.dn;
-    serviceData.identifiedEmail = userObject.email;
-=======
 //  not an account from any particular service - create here a 'carbonio'-service account instead
 // only called if 'createLocalUserIfNotExists' configuration option is true
 // https://github.com/meteor/meteor/blob/devel/packages/accounts-base/accounts_server.js:
@@ -101,16 +81,11 @@ LDAP.createUser = async function( userObject, person, extraFields ){
     delete serviceData.sn;
     delete serviceData.uid;
     serviceData.displayName = _.trim( serviceData.displayName );
->>>>>>> vnext
     const res = await Accounts.updateOrCreateUserFromExternalService( AccountsZimbra.C.Service, serviceData );
     await Meteor.users.updateAsync({ _id: res.userId }, { $set: { emails: [
         {
             address: userObject.email,
-<<<<<<< HEAD
-            verified: false,
-=======
             verified: await _autoVerifyEmail( userObject, person ),
->>>>>>> vnext
             _id: Random.id()
         }
     ]}});
@@ -141,22 +116,15 @@ LDAP.filter = function( isEmailAddress, usernameOrEmail, FQDN, settings ){
     return searchFilter;
 };
 
-<<<<<<< HEAD
-// for zimbra, want tranform 'user@domain.com' to 'dc=com'
-=======
 // for zimbra/carbonio, want tranform 'user@domain.com' to 'dc=com'
->>>>>>> vnext
 LDAP.searchBase = function( searchUsername, server, isEmail, request, settings ){
     const words = searchUsername.split( '@' );
     const domain = words[1].split( '.' );
     return 'dc='+domain[domain.length-1];
 }
-<<<<<<< HEAD
-=======
 
 // have a callback on successful signin
 //  no relevant arguments detected (currentModule, parentModule, waitForDepsFunction, finishFunction)
 LDAP.onSignIn( function(){
     logger.debug( 'onSignIn()', arguments );
 });
->>>>>>> vnext
