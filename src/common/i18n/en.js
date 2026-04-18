@@ -6,24 +6,17 @@ AccountsZimbra.i18n = {
     ... AccountsZimbra.i18n,
     ... {
         en: {
-            change: {
-                button: {
-                    label: 'Change AccountsZimbra password',
-                    title: 'Change your password in AccountsZimbra Identity Manager'
-                },
-                success: 'Password has been successfully changed'
-            },
             login: {
                 button: {
-                    label: 'Login with AccountsZimbra',
-                    title: 'Login with AccountsZimbra Identity Manager'
+                    label: 'Login with Zimbra',
+                    title: 'Login with Zimbra LDAP directory'
                 }
             },
-            logout: {
-                button: {
-                    label: 'Logout',
-                    title: 'Terminate this session'
-                }
+            modal: {
+                signin_title: 'Signin with my Zimbra email address'
+            },
+            result: {
+                error: 'Unfortunately unable to login via LDAP. You can try to fix your credentials, or retry later'
             }
         }
     }
