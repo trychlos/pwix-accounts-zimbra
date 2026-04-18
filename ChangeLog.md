@@ -4,9 +4,9 @@
 
 ### 1.0.0
 
-Release date: 2026- 4-18
+    Release date: 2026- 4-18
 
-- Initial release
+    - Initial release
 
 ---
 P. Wieser
