@@ -10,7 +10,8 @@
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
-|    1 |  |  |
+|    1 | 2026- 4-18 | cleanup the dom when modal is cancelled |
+|    2 |  |  |
 
 ---
 ## Done
@@ -20,4 +21,4 @@
 
 ---
 P. Wieser
-- Last updated on 2024, Jan. 5th
+- Last updated on 2026, Apr. 18th

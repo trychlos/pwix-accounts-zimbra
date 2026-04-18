@@ -4,14 +4,27 @@
 
 import _ from 'lodash';
 
+import { Logger } from 'meteor/pwix:logger';
+import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-let _conf = {};
+const logger = Logger.get();
 
+let _conf = {};
 AccountsZimbra._conf = new ReactiveVar( _conf );
 
 AccountsZimbra._defaults = {
-    createUserIfNotExists: false,
+    addRoles: null,
+    autoVerifyEmail: false,
+    createLocalUserIfBindFailed: false,
+    createLocalUserIfNotExists: true,
+    itemLabel: pwixI18n.label( I18N, 'login.button.label' ),
+    itemLogo: '/packages/pwix_accounts-zimbra/resources/png/zimbra-logo-transparent.png',
+    itemTitle: pwixI18n.label( I18N, 'login.button.title' ),
+    logging: false,
+    modalTitle: pwixI18n.label( I18N, 'modal.signin_title' ),
+    serverDn: "",
+    serverUrl: "ldap://localhost:389",
     verbosity: AccountsZimbra.C.Verbose.CONFIGURE
 };
 
@@ -23,11 +36,19 @@ AccountsZimbra._defaults = {
  */
 AccountsZimbra.configure = function( o ){
     if( o && _.isObject( o )){
-        _conf = _.merge( AccountsZimbra._defaults, _conf, o );
-        AccountsZimbra._conf.set( _conf );
-        // be verbose if asked for
-        if( _conf.verbosity & AccountsZimbra.C.Verbose.CONFIGURE ){
-            console.log( 'pwix:accounts-zimbra configure() with', o );
+        // check that keys exist
+        let built_conf = {};
+        Object.keys( o ).forEach(( it ) => {
+            if( Object.keys( AccountsZimbra._defaults ).includes( it )){
+                built_conf[it] = o[it];
+            } else {
+                logger.warn( 'configure() ignore unmanaged key \''+it+'\'' );
+            }
+        });
+        if( Object.keys( built_conf ).length ){
+            _conf = _.merge( AccountsZimbra._defaults, _conf, built_conf );
+            AccountsZimbra._conf.set( _conf );
+            logger.verbose({ verbosity: _conf.verbosity, against: AccountsZimbra.C.Verbose.CONFIGURE }, 'configure() with', built_conf );
         }
     }
     // also acts as a getter

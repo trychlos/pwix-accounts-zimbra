@@ -6,24 +6,17 @@ AccountsZimbra.i18n = {
     ... AccountsZimbra.i18n,
     ... {
         fr: {
-            change: {
-                button: {
-                    label: 'Changer le mot de passe AccountsZimbra',
-                    title: 'Modifie votre mot de passe dans AccountsZimbra Identity Manager'
-                },
-                success: 'Le mot de passe a été mis à jour avec succès'
-            },
             login: {
                 button: {
-                    label: 'Se connecter avec AccountsZimbra',
-                    title: 'Se connecte avec le gestionnaire d\'identités AccountsZimbra'
+                    label: 'Se connecter avec Zimbra',
+                    title: 'Se connecter avec le répertoire d\'identités Zimbra'
                 }
             },
-            logout: {
-                button: {
-                    label: 'Se déconnecter',
-                    title: 'Termine cette session'
-                }
+            modal: {
+                signin_title: 'Se connecter avec mon adresse de messagerie Zimbra'
+            },
+            result: {
+                error: 'Nous sommes malheureusement dans l\'impossibilité de vous identifier par LDAP. Vous pouvez essayer de corriger vos identifiants, ou réessayer ultérieurement.'
             }
         }
     }
