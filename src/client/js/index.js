@@ -4,4 +4,6 @@
 
 import '../../common/js/index.js';
 
+import '../stylesheets/accounts_zimbra.less';
+
 import './functions.js';

@@ -3,7 +3,4 @@
  */
 
 Meteor.methods({
-    async 'pwix.AccountsZimbra.m.setupService'(){
-        await AccountsZimbra.s.setupService();
-    }
 });

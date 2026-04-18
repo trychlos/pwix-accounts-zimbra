@@ -5,6 +5,7 @@
 import _ from 'lodash';
 
 import { Logger } from 'meteor/pwix:logger';
+import { pwixI18n } from 'meteor/pwix:i18n';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 const logger = Logger.get();
@@ -13,7 +14,17 @@ let _conf = {};
 AccountsZimbra._conf = new ReactiveVar( _conf );
 
 AccountsZimbra._defaults = {
-    createUserIfNotExists: false,
+    addRoles: null,
+    autoVerifyEmail: false,
+    createLocalUserIfBindFailed: false,
+    createLocalUserIfNotExists: true,
+    itemLabel: pwixI18n.label( I18N, 'login.button.label' ),
+    itemLogo: '/packages/pwix_accounts-zimbra/resources/png/zimbra-logo-transparent.png',
+    itemTitle: pwixI18n.label( I18N, 'login.button.title' ),
+    logging: false,
+    modalTitle: pwixI18n.label( I18N, 'modal.signin_title' ),
+    serverDn: "",
+    serverUrl: "ldap://localhost:389",
     verbosity: AccountsZimbra.C.Verbose.CONFIGURE
 };
 
