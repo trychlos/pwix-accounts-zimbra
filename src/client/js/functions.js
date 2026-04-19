@@ -118,6 +118,13 @@ const zimbraGetCredentials = function(){
                 Meteor.loginWithZimbra( null, null, { email, password });
             }
         }, $( 'body' )[0] );
-        //logger.debug( Modal.topmost());
+        const modal = Modal.topmost();
+        const modalId = modal.id();
+        // install an event handler to monitor the modal closing
+        $( document ).on( 'md-close', '.modal#'+modalId, function( event, data ){
+            if( data.id === modalId ){
+                _cleanupDOM();
+            }
+        });
     }
 }

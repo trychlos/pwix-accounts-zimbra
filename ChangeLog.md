@@ -8,6 +8,7 @@
 
     - Define new AccountsZimbra.authenticate() common function
     - Define new AccountsZimbra.isZimbraUser() common function
+    - Cleanup the DOM when the dialog is cancelled (todo #1)
 
 ### 1.0.0
 
