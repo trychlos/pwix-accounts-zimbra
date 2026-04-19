@@ -49,12 +49,6 @@ const _cleanupDOM = function(){
     $( '.acUserLogin[data-ac-name="loginWithZimbra"]' ).remove();
 };
 
-// whether the currently logged-in user has been authenticated with Zimbra/Carbonio
-const _isZimbraUser = function( connection ){
-    const userDoc = connection.userDoc();
-    return Boolean( userDoc?.services?.zimbra );
-};
-
 Meteor.startup(() => {
     Tracker.autorun(() => {
         // set a hook on dropdown menu items
@@ -69,7 +63,7 @@ Meteor.startup(() => {
                 const connection = AccountsUI.Connection;
                 switch( connection.state()){
                     case AccountsUI.C.Connection.LOGGED:
-                        if( _isZimbraUser( connection )){
+                        if( await AccountsZimbra.isZimbraUser( connection.userDoc())){
                             for( let i=0 ; i<items.length ; ++i ){
                                 let it = items[i];
                                 if( it.match( /ac-changepwd/ )){
