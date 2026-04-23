@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-zimbra',
-    version: '1.1.0',
+    version: '1.1.1-rc.0',
     summary: 'A Meteor package to let a user authenticates against a Zimbra/Carbonio CE LDAP directory',
     git: 'https://github.com/trychlos/pwix-accounts-zimbra.git',
     documentation: 'README.md'
