@@ -2,11 +2,13 @@
 
 ## ChangeLog
 
-### 1.0.1-rc.0
+### 1.1.0
 
-    Release date: 
+    Release date: 2026- 4-23
 
-    - 
+    - Define new AccountsZimbra.authenticate() common function
+    - Define new AccountsZimbra.isZimbraUser() common function
+    - Cleanup the DOM when the dialog is cancelled (todo #1)
 
 ### 1.0.0
 
@@ -16,4 +18,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, Apr. 18th
+- Last updated on 2026, Apr. 23rd
