@@ -57,6 +57,16 @@ Meteor.startup(() => {
         if( Package['pwix:accounts-ui'] && Package['pwix:accounts-ui'].AccountsUI.ready()){
             const AccountsUI = Package['pwix:accounts-ui'].AccountsUI;
 
+            // whether the dropdown menu items already have a divider
+            const _hasDivider = function( items ){
+                for( const it of items ){
+                    if( it.match( 'dropdown-divider' )){
+                        return true;
+                    }
+                }
+                return false;
+            };
+
             // install a menu items hook
             AccountsUI.onRebuildMenuItems( async ( items, opts ) => {
                 //console.warn( 'onRebuildMenuItems', items, opts );
@@ -84,7 +94,9 @@ Meteor.startup(() => {
                         if( _.isFunction( logo )){
                             logo = logo();
                         }
-                        items.push( '<hr class="dropdown-divider">' );
+                        if( !_hasDivider( items )){
+                            items.push( '<hr class="dropdown-divider">' );
+                        }
                         items.push( '<a class="dropdown-item d-flex align-items-center justify-content-start ac-dropdown-item" href="#" data-ac-event="ac-zimbra-signin"><img class="ac-zimbra-img" src="'+logo+'" /><p>'+label+'</p></a>' );
                         break;
                 }

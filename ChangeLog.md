@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - When installing the menu item, only set a divider if not already present
 
 ### 1.1.0
 
