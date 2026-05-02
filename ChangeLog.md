@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.1.1-rc.0
+### 1.1.1
 
-    Release date: 
+    Release date: 2026- 5- 2
 
     - When installing the menu item, only set a divider if not already present
 
@@ -24,4 +24,4 @@
 
 ---
 P. Wieser
-- Last updated on 2026, Apr. 23rd
+- Last updated on 2026, May. 2nd
